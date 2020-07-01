@@ -7,7 +7,6 @@ copy_csm_share () {
         share/streams
         share/util
         share/RandNum/src
-        share/esmf_wrf_timemgr      
     )
     for src_dir in ${csm_share_dirs[*]}; do
         dest_dir=src/$src_dir
@@ -22,7 +21,6 @@ copy_csm_share () {
 
     # Remove unnecessary files
     find src -type f -iname CMakeLists.txt -delete
-    rm -rf src/share/esmf_wrf_timemgr/unittests
 
     # Convert .in files to valid Fortran files
     genf90=`realpath ../cime/src/externals/genf90/genf90.pl`
