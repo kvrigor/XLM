@@ -10,7 +10,7 @@ find_package(NetCDF COMPONENTS C Fortran)
 find_package(PnetCDF REQUIRED COMPONENTS Fortran)
 
 #build requirements
-target_compile_definitions(${PROJECT_NAME} PRIVATE LINUX NDEBUG NO_MPI2 PIO1 FORTRANUNDERSCORE NO_R16 CPRGNU HAVE_SLASHPROC _NO_MPI_RSEND _NETCDF _NOPNETCDF _NOUSEMCT _USEBOX) #TIMING
+target_compile_definitions(${PROJECT_NAME} PRIVATE TIMING LINUX NDEBUG NO_MPI2 PIO1 FORTRANUNDERSCORE NO_R16 CPRGNU HAVE_SLASHPROC _NO_MPI_RSEND _NETCDF _NOPNETCDF _NOUSEMCT _USEBOX) #TIMING
 target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-form -ffree-line-length-none -fconvert=big-endian -mcmodel=medium>)
 
 target_sources(${PROJECT_NAME} PRIVATE 
@@ -44,7 +44,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    Fortran_MODULE_DIRECTORY ${CMAKE_INSTALL_INCLUDEDIR})
+    Fortran_MODULE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/include)
 
 install (TARGETS ${PROJECT_NAME}
     EXPORT mctTargets

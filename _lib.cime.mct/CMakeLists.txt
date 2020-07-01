@@ -76,7 +76,7 @@ target_sources(${PROJECT_NAME} PRIVATE
 )
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    Fortran_MODULE_DIRECTORY ${CMAKE_INSTALL_INCLUDEDIR})
+    Fortran_MODULE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/include)
 
 install (TARGETS ${PROJECT_NAME}
     EXPORT mctTargets

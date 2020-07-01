@@ -23,7 +23,7 @@ target_sources(${PROJECT_NAME} PRIVATE perf_mod.F90 perf_utils.F90)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     PUBLIC_HEADER gptl.h
-    Fortran_MODULE_DIRECTORY ${CMAKE_INSTALL_INCLUDEDIR})
+    Fortran_MODULE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/include)
 
 install (TARGETS ${PROJECT_NAME}
     EXPORT gptlTargets
