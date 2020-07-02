@@ -1,0 +1,4 @@
+[submodule "cime"]
+	path = cime
+	url = https://github.com/ESMCI/cime.git
+	branch = cime5.6.33
