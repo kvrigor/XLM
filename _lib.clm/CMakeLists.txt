@@ -5,10 +5,7 @@ project (clm LANGUAGES C Fortran)
 add_library(${PROJECT_NAME} STATIC)
 
 include(GNUInstallDirs)
-find_package(MPI REQUIRED)
-if(MPI_FOUND)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_MPI)
-endif(MPI_FOUND)
+
 if(UNIX AND NOT APPLE)
     target_compile_definitions(${PROJECT_NAME} PRIVATE LINUX)
 endif()
@@ -31,12 +28,50 @@ target_sources(${PROJECT_NAME} PRIVATE
     main/ncdio_pio.F90
 )
 
-
-
 # Fortran files: cat src/srcFiles.txt | grep -E "*.F90$"
 target_sources(${PROJECT_NAME} PRIVATE 
-    utils/clmfates_interfaceMod.F90
-    utils/clmfates_paraminterfaceMod.F90
+    fates/fire/SFMainMod.F90
+    fates/fire/SFParamsMod.F90
+    fates/biogeophys/EDBtranMod.F90
+    fates/biogeophys/FatesPlantRespPhotosynthMod.F90
+    fates/biogeophys/FatesPlantHydraulicsMod.F90
+    fates/biogeophys/FatesBstressMod.F90
+    fates/biogeophys/EDSurfaceAlbedoMod.F90
+    fates/biogeophys/EDAccumulateFluxesMod.F90
+    fates/parteh/PRTLossFluxesMod.F90
+    fates/parteh/PRTAllometricCarbonMod.F90
+    fates/parteh/PRTGenericMod.F90
+    fates/biogeochem/EDPatchDynamicsMod.F90
+    fates/biogeochem/EDCanopyStructureMod.F90
+    fates/biogeochem/EDPhysiologyMod.F90
+    fates/biogeochem/FatesAllometryMod.F90
+    fates/biogeochem/FatesLitterMod.F90
+    fates/biogeochem/EDCohortDynamicsMod.F90
+    fates/biogeochem/EDMortalityFunctionsMod.F90
+    fates/biogeochem/EDLoggingMortalityMod.F90
+    fates/main/EDMainMod.F90
+    fates/main/FatesInventoryInitMod.F90
+    fates/main/FatesSynchronizedParamsMod.F90
+    fates/main/FatesHydraulicsMemMod.F90
+    fates/main/FatesGlobals.F90
+    fates/main/FatesHistoryInterfaceMod.F90
+    fates/main/FatesRestartInterfaceMod.F90
+    fates/main/FatesIntegratorsMod.F90
+    fates/main/EDInitMod.F90
+    fates/main/EDParamsMod.F90
+    fates/main/EDPftvarcon.F90
+    fates/main/FatesIODimensionsMod.F90
+    fates/main/FatesIOVariableKindMod.F90
+    fates/main/FatesHistoryVariableType.F90
+    fates/main/FatesSizeAgeTypeIndicesMod.F90
+    fates/main/FatesParametersInterface.F90
+    fates/main/FatesRestartVariableType.F90
+    fates/main/EDTypesMod.F90
+    fates/main/FatesUtilsMod.F90
+    fates/main/FatesConstantsMod.F90
+    fates/main/FatesInterfaceMod.F90
+    fates/main/FatesParameterDerivedMod.F90
+    fates/main/ChecksBalancesMod.F90
     init_interp/initInterp2dvar.F90
     init_interp/initInterp1dData.F90
     init_interp/initInterpMultilevelSnow.F90
@@ -51,9 +86,11 @@ target_sources(${PROJECT_NAME} PRIVATE
     init_interp/initInterpMultilevelSplit.F90
     utils/array_utils.F90
     utils/clm_varorb.F90
+    utils/clmfates_interfaceMod.F90
     utils/getdatetime.F90
     utils/SimpleMathMod.F90
     utils/quadraticMod.F90
+    utils/clmfates_paraminterfaceMod.F90
     utils/restUtilMod.F90
     utils/AnnualFluxDribbler.F90
     utils/clm_time_manager.F90
