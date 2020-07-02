@@ -2,3 +2,7 @@
 	path = cime
 	url = https://github.com/ESMCI/cime.git
 	branch = cime5.6.33
+[submodule "src/fates"]
+	path = src/fates
+	url = https://github.com/NGEET/fates
+        branch = sci.1.30.0_api.8.0.0
