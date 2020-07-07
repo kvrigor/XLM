@@ -199,6 +199,7 @@ backup_cmakelists() {
     cp -f src/stubs/CMakeLists.txt CMakeLists_stubs.txt
     cp -f src/datm/CMakeLists.txt CMakeLists_datm.txt
     cp -f src/mosart/CMakeLists.txt CMakeLists_mosart.txt
+    cp -f src/cesm/CMakeLists.txt CMakeLists_cesm.txt
 }
 
 if [ "$1" = "--delete" ] || [ "$1" = "-d" ]; then

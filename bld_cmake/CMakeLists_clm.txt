@@ -28,7 +28,8 @@ target_sources(${PROJECT_NAME} PRIVATE
 )
 
 # Fortran files: cat src/srcFiles.txt | grep -E "*.F90$"
-target_sources(${PROJECT_NAME} PRIVATE 
+target_sources(${PROJECT_NAME} 
+PUBLIC 
     fates/fire/SFMainMod.F90
     fates/fire/SFParamsMod.F90
     fates/biogeophys/EDBtranMod.F90
@@ -99,8 +100,8 @@ target_sources(${PROJECT_NAME} PRIVATE
     utils/spmdMod.F90
     utils/fileutils.F90
     cpl/lnd_import_export.F90
-    cpl/lnd_comp_mct.F90
     cpl/clm_cpl_indices.F90
+    cpl/lnd_comp_mct.F90
     soilbiogeochem/SoilBiogeochemDecompMod.F90
     soilbiogeochem/SoilBiogeochemDecompCascadeBGCMod.F90
     soilbiogeochem/SoilBiogeochemDecompCascadeCNMod.F90

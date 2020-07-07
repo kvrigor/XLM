@@ -1,0 +1,54 @@
+cmake_minimum_required (VERSION 3.17)
+
+project (cesm LANGUAGES Fortran)
+
+add_executable(${PROJECT_NAME})
+
+include(GNUInstallDirs)
+
+if(UNIX AND NOT APPLE)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE LINUX)
+endif()
+
+#build requirements
+target_compile_definitions(${PROJECT_NAME} PRIVATE CPRGNU NDEBUG NO_MPI2 PIO1 FORTRANUNDERSCORE NO_R16 CPRGNU HAVE_SLASHPROC _NETCDF)
+target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-form -ffree-line-length-none -mcmodel=medium -fconvert=big-endian>)
+
+# Fortran template files transformed through genf90.pl
+target_sources(${PROJECT_NAME} PRIVATE
+    map_glc2lnd_mod.F90
+    prep_wav_mod.F90
+    seq_io_mod.F90
+    seq_hist_mod.F90
+    seq_frac_mct.F90
+    prep_rof_mod.F90
+    map_lnd2rof_irrig_mod.F90
+    cime_comp_mod.F90
+    seq_rest_mod.F90
+    prep_ocn_mod.F90
+    map_lnd2glc_mod.F90
+    prep_glc_mod.F90
+    cime_driver.F90
+    component_mod.F90
+    component_type_mod.F90
+    seq_flux_mct.F90
+    cplcomp_exchange_mod.F90
+    seq_domain_mct.F90
+    seq_diag_mct.F90
+    prep_ice_mod.F90
+    seq_map_type_mod.F90
+    prep_aoflux_mod.F90
+    prep_lnd_mod.F90
+    t_driver_timers_mod.F90
+    seq_map_mod.F90
+    prep_atm_mod.F90
+    mrg_mod.F90
+)
+
+target_link_libraries(${PROJECT_NAME} 
+                PRIVATE csm_share atm clm ocn wav ice glc esp rof)
+
+# install (TARGETS ${PROJECT_NAME}
+#     EXPORT "${PROJECT_NAME}Targets"
+#     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+# )
