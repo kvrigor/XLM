@@ -11,13 +11,13 @@ copy_cmake_modules() {
 }
 
 copy_gptl () {
-    lib_folder=src/1_gptl
+    lib_folder=src/gptl
     mkdir -p $lib_folder && cp $cime_src/share/timing/* "$_"
     echo "Imported GPTL source files"
 }
 
 copy_mct () {
-    lib_folder=src/2_mct
+    lib_folder=src/mct
     mkdir -p $lib_folder/mct $lib_folder/mpeu
     cp -rf $cime_src/externals/mct/mct/* $lib_folder/mct
     cp -rf $cime_src/externals/mct/mpeu/* $lib_folder/mpeu
@@ -26,7 +26,7 @@ copy_mct () {
 }
 
 copy_pio () {
-    lib_folder=src/3_pio
+    lib_folder=src/pio
     mkdir -p $lib_folder
     cp -rf $cime_src/externals/pio1/pio/* $lib_folder
     
@@ -54,12 +54,13 @@ copy_esmf () {
 }
 
 copy_csm_share () {
-    lib_folder=src/5_csm_share
+    lib_folder=src/csm_share
     csm_share_dirs=(
         drivers/mct/shr
         share/streams
         share/util
         share/RandNum/src
+        share/esmf_wrf_timemgr
     )
     for src_dir in ${csm_share_dirs[*]}; do
         dest_dir=$lib_folder/$src_dir
@@ -71,9 +72,12 @@ copy_csm_share () {
     mkdir -p $lib_folder/include
     cp $cime_src/share/include/* $lib_folder/include
     cp $cime_src/share/RandNum/include/* $lib_folder/include
+    cp $cime_src/share/esmf_wrf_timemgr/ESMF_TimeMgr.inc $lib_folder/include
+    cp $cime_src/share/esmf_wrf_timemgr/ESMF_Macros.inc $lib_folder/include
 
     # Remove unnecessary files
     find $lib_folder -type f -iname CMakeLists.txt -delete
+    rm -rf $cime_src/share/esmf_wrf_timemgr/unittests
 
     # Convert .in files to valid Fortran files
     (
@@ -93,7 +97,7 @@ copy_csm_share () {
 }
 
 copy_clm () {
-    lib_folder=src/6_clm
+    lib_folder=src/clm
     clm_dirs=(
         main
         biogeophys
@@ -134,7 +138,7 @@ copy_clm () {
 }
 
 copy_stubs () {
-    lib_folder=src/7_stubs
+    lib_folder=src/stubs
     mkdir -p $lib_folder 
     cp $cime_src/components/stub_comps/sglc/cpl/glc_comp_mct.F90 $lib_folder
     cp $cime_src/components/stub_comps/socn/cpl/ocn_comp_mct.F90 $lib_folder
@@ -145,7 +149,7 @@ copy_stubs () {
 }
 
 copy_datm () {
-    lib_folder=src/8_datm
+    lib_folder=src/datm
     mkdir -p $lib_folder
     cp $cime_src/components/data_comps/datm/datm_shr_mod.F90 $lib_folder
     cp $cime_src/components/data_comps/datm/datm_comp_mod.F90 $lib_folder
@@ -154,7 +158,7 @@ copy_datm () {
 }
 
 copy_mosart () {
-    lib_folder=src/9_mosart
+    lib_folder=src/mosart
     mkdir -p $lib_folder
     cp -rf ../components/mosart/src/cpl $lib_folder
     cp -rf ../components/mosart/src/riverroute $lib_folder
@@ -163,7 +167,7 @@ copy_mosart () {
 }
 
 copy_cesm () {
-    lib_folder=src/10_cesm
+    lib_folder=src/cesm
     mkdir -p $lib_folder
     cp $cime_src/drivers/mct/main/* $lib_folder
     # Remove unnecessary files
@@ -177,7 +181,7 @@ copy_source_files() {
     copy_gptl
     copy_mct
     copy_pio
-    copy_esmf
+    #copy_esmf
     copy_csm_share
     copy_clm
     copy_stubs
@@ -186,12 +190,28 @@ copy_source_files() {
     copy_cesm
 }
 
+backup_cmakelists() {
+    cp -f src/gptl/CMakeLists.txt CMakeLists_gptl.txt
+    cp -f src/mct/CMakeLists.txt CMakeLists_mct.txt
+    cp -f src/pio/CMakeLists.txt CMakeLists_pio.txt
+    cp -f src/csm_share/CMakeLists.txt CMakeLists_csm_share.txt
+    cp -f src/clm/CMakeLists.txt CMakeLists_clm.txt
+    cp -f src/stubs/CMakeLists.txt CMakeLists_stubs.txt
+    cp -f src/datm/CMakeLists.txt CMakeLists_datm.txt
+    cp -f src/mosart/CMakeLists.txt CMakeLists_mosart.txt
+}
+
 if [ "$1" = "--delete" ] || [ "$1" = "-d" ]; then
+    backup_cmakelists
     rm -rf src
     echo "Removed src directory"
 elif [ "$1" = "--clean" ] || [ "$1" = "-c" ]; then
+    backup_cmakelists
     rm -rf src
     copy_source_files
 else
     copy_source_files
 fi
+
+
+
