@@ -1,21 +1,20 @@
-cmake_minimum_required (VERSION 3.17)
-
-project (mct LANGUAGES Fortran)
+project (mct
+    VERSION 2.10
+    DESCRIPTION "Model Coupling Toolkit modified by CIME developers"
+    HOMEPAGE_URL "https://github.com/ESMCI/cime/tree/cime5.6.33/src/externals/mct"
+    LANGUAGES Fortran)
 
 add_library(${PROJECT_NAME} STATIC)
 
-include(GNUInstallDirs)
-find_package(MPI REQUIRED)
-
-#build requirements
-target_compile_definitions(${PROJECT_NAME} PRIVATE CPRGNU NDEBUG)
-target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-form -ffree-line-length-none -fconvert=big-endian -mcmodel=medium>)
+# NDEBUG defined in assermpeu.H 
+target_compile_definitions(${PROJECT_NAME} PRIVATE NDEBUG SYSLINUX)
 
 # TODO: get_zeits.c requires config.h which is auto-fenerated by autotools configure script.
 # Skipping this for now!
 # target_sources(${PROJECT_NAME} PRIVATE mpeu/get_zeits.c)
 
-# Fortran files: cat src/srcFiles.txt | grep -E "*.F90$"
+#target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-form -ffree-line-length-none -fconvert=big-endian -mcmodel=medium>)
+
 target_sources(${PROJECT_NAME} 
     PUBLIC 
         mpeu/m_FileResolv.F90
@@ -75,12 +74,3 @@ target_sources(${PROJECT_NAME}
         mct/m_ExchangeMaps.F90
         mct/m_SparseMatrixComms.F90
 )
-
-# set_target_properties(${PROJECT_NAME} PROPERTIES
-#     Fortran_MODULE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/include)
-
-# install (TARGETS ${PROJECT_NAME}
-#     EXPORT mctTargets
-#     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-# )

@@ -1,17 +1,33 @@
-cmake_minimum_required (VERSION 3.17)
-
-project (pio LANGUAGES C Fortran)
+project (pio 
+    DESCRIPTION "Parallel I/O Library modified by CIME developers"
+    HOMEPAGE_URL "https://github.com/ESMCI/cime/tree/cime5.6.33/src/externals/pio1/pio"
+    LANGUAGES C Fortran)
 
 add_library(${PROJECT_NAME} STATIC)
 
-include(GNUInstallDirs)
-find_package(MPI REQUIRED)
-find_package(NetCDF COMPONENTS C Fortran)
-find_package(PnetCDF REQUIRED COMPONENTS Fortran)
+find_package(MPI)
+if(MPI_FOUND)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC USEMPIIO)
+else()
+    target_compile_definitions(${PROJECT_NAME} PRIVATE NO_MPIMOD NO_MPI2)
+endif()
 
-#build requirements
-target_compile_definitions(${PROJECT_NAME} PRIVATE TIMING LINUX NDEBUG NO_MPI2 PIO1 FORTRANUNDERSCORE NO_R16 CPRGNU HAVE_SLASHPROC _NO_MPI_RSEND _NETCDF _NOPNETCDF _NOUSEMCT _USEBOX) #TIMING
-target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-form -ffree-line-length-none -fconvert=big-endian -mcmodel=medium>)
+find_package(PnetCDF COMPONENTS Fortran)
+if(PnetCDF_Fortran_FOUND)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:USE_PNETCDF_MOD>)
+else()
+    find_package(NetCDF COMPONENTS Fortran)
+    if(NetCDF_Fortran_FOUND)
+        target_compile_definitions(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:_NETCDF _NETCDF4>)
+    else()
+        target_compile_definitions(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:_PNETCDF>)
+    endif()
+endif()
+
+# According to comment header in pio_support.F90, _NO_MPI_RSEND 
+# is work around for poor rsend performance on cray systems with
+# Gemini interconnect
+# target_compile_definitions(${PROJECT_NAME} PRIVATE _NO_MPI_RSEND)
 
 target_sources(${PROJECT_NAME} 
     PUBLIC
@@ -43,13 +59,3 @@ target_sources(${PROJECT_NAME}
         rearrange.F90
         topology.c
 )
-
-target_link_libraries(${PROJECT_NAME} PUBLIC gptl)
-# set_target_properties(${PROJECT_NAME} PROPERTIES
-#     Fortran_MODULE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/include)
-
-# install (TARGETS ${PROJECT_NAME}
-#     EXPORT mctTargets
-#     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-# )

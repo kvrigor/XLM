@@ -1,17 +1,12 @@
-cmake_minimum_required (VERSION 3.17)
-
-project (clm LANGUAGES C Fortran)
+project (clm
+    DESCRIPTION "CLM5 biogeophysics and biogeochemistry engine"
+    HOMEPAGE_URL "https://github.com/kvrigor/XLM/tree/release-clm5.0/src"
+    LANGUAGES C Fortran)
 
 add_library(${PROJECT_NAME} STATIC)
 
-include(GNUInstallDirs)
-
-if(UNIX AND NOT APPLE)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE LINUX)
-endif()
-
 #build requirements
-target_compile_definitions(${PROJECT_NAME} PRIVATE CPRGNU NDEBUG NO_MPI2 PIO1 FORTRANUNDERSCORE NO_R16 CPRGNU HAVE_SLASHPROC _NETCDF)
+target_compile_definitions(${PROJECT_NAME} PRIVATE NDEBUG) #_NETCDF4 USE_PNETCDF_MOD)
 target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-form -ffree-line-length-none -mcmodel=medium -fconvert=big-endian>)
 
 target_include_directories(${PROJECT_NAME} PRIVATE include)
@@ -316,12 +311,3 @@ PUBLIC
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE csm_share)
-
-# set_target_properties(${PROJECT_NAME} PROPERTIES
-#     Fortran_MODULE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/include)
-
-# install (TARGETS ${PROJECT_NAME}
-#     EXPORT csmshareTargets
-#     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-# )

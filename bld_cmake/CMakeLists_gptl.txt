@@ -1,32 +1,28 @@
-cmake_minimum_required (VERSION 3.17)
-
-project (gptl LANGUAGES C Fortran)
+project (gptl
+    DESCRIPTION "General Purpose Timing Library modified by CIME developers"
+    HOMEPAGE_URL "https://github.com/ESMCI/cime/tree/cime5.6.33/src/share/timing"
+    LANGUAGES C Fortran)
 
 add_library(${PROJECT_NAME} STATIC)
 
-include(GNUInstallDirs)
-find_package(MPI REQUIRED)
+find_package(MPI)
 if(MPI_FOUND)
     target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_MPI)
-endif(MPI_FOUND)
-if(UNIX AND NOT APPLE)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE LINUX)
 endif()
-target_compile_definitions(${PROJECT_NAME} PRIVATE FORTRANUNDERSCORE)
-# TODO: Add machine-specific definition -DCPR{Compiler}, where {Compiler} is
-# read from config_compilers.xml. Based from source files only -DCPRNAG and -DCPRIBM are supported
+target_compile_definitions(${PROJECT_NAME} PRIVATE FORTRANUNDERSCORE HAVE_SLASHPROC)
 
-# Explicitly list sources in this orderL (1) headers (2) C files (3) Fortran files
-target_sources(${PROJECT_NAME} PRIVATE gptl.h gptl.inc private.h)
-target_sources(${PROJECT_NAME} PRIVATE f_wrappers.c gptl.c gptl_papi.c GPTLget_memusage.c GPTLprint_memusage.c GPTLutil.c)
-target_sources(${PROJECT_NAME} PUBLIC perf_mod.F90 perf_utils.F90)
-
-# set_target_properties(${PROJECT_NAME} PROPERTIES
-#     PUBLIC_HEADER gptl.h
-#     Fortran_MODULE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/include)
-
-# install (TARGETS ${PROJECT_NAME}
-#     EXPORT gptlTargets
-#     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-#     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-# )
+target_sources(${PROJECT_NAME} 
+    PRIVATE 
+        gptl.h 
+        private.h
+        gptl.inc 
+        f_wrappers.c 
+        gptl.c 
+        gptl_papi.c 
+        GPTLget_memusage.c 
+        GPTLprint_memusage.c 
+        GPTLutil.c
+    PUBLIC 
+        perf_mod.F90
+        perf_utils.F90
+    )
