@@ -1,18 +1,14 @@
-cmake_minimum_required (VERSION 3.17)
-
-project (cesm LANGUAGES Fortran)
+project (cesm 
+    DESCRIPTION "Community Earth System Model"
+    HOMEPAGE_URL "https://github.com/ESCOMP/MOSART/tree/release-cesm2.0"
+    LANGUAGES Fortran)
 
 add_executable(${PROJECT_NAME})
-
-include(GNUInstallDirs)
-
-if(UNIX AND NOT APPLE)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE LINUX)
-endif()
 
 #build requirements
 target_compile_definitions(${PROJECT_NAME} PRIVATE CPRGNU NDEBUG NO_MPI2 PIO1 FORTRANUNDERSCORE NO_R16 CPRGNU HAVE_SLASHPROC _NETCDF)
 target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-form -ffree-line-length-none -mcmodel=medium -fconvert=big-endian>)
+
 
 # Fortran template files transformed through genf90.pl
 target_sources(${PROJECT_NAME} PRIVATE
