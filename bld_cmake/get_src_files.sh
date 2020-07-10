@@ -176,30 +176,53 @@ copy_cesm () {
     echo "Imported cesm source files"
 }
 
+
+
+backup_cmakelists() {
+    if [ -d src ]; then
+        (
+            cd src
+            [ -f CMakeLists.txt ] && cp -f CMakeLists.txt ../CMakeLists.txt
+            [ -f gptl/CMakeLists.txt ] && cp -f gptl/CMakeLists.txt ../CMakeLists_gptl.txt
+            [ -f mct/CMakeLists.txt ] && cp -f mct/CMakeLists.txt ../CMakeLists_mct.txt
+            [ -f pio/CMakeLists.txt ] && cp -f pio/CMakeLists.txt ../CMakeLists_pio.txt
+            [ -f csm_share/CMakeLists.txt ] && cp -f csm_share/CMakeLists.txt ../CMakeLists_csm_share.txt
+            [ -f clm/CMakeLists.txt ] && cp -f clm/CMakeLists.txt ../CMakeLists_clm.txt
+            [ -f stubs/CMakeLists.txt ] && cp -f stubs/CMakeLists.txt ../CMakeLists_stubs.txt
+            [ -f datm/CMakeLists.txt ] && cp -f datm/CMakeLists.txt ../CMakeLists_datm.txt
+            [ -f mosart/CMakeLists.txt ] && cp -f mosart/CMakeLists.txt ../CMakeLists_mosart.txt
+            [ -f cesm/CMakeLists.txt ] && cp -f cesm/CMakeLists.txt ../CMakeLists_cesm.txt
+        )
+    else
+        echo "No cmakelists"
+    fi
+}
+
+import_cmakelists() {
+    cp -vf CMakeLists.txt src/
+    cp -vf CMakeLists_gptl.txt src/gptl/CMakeLists.txt
+    cp -vf CMakeLists_mct.txt src/mct/CMakeLists.txt
+    cp -vf CMakeLists_pio.txt src/pio/CMakeLists.txt
+    cp -vf CMakeLists_csm_share.txt src/csm_share/CMakeLists.txt
+    cp -vf CMakeLists_clm.txt src/clm/CMakeLists.txt
+    cp -vf CMakeLists_stubs.txt src/stubs/CMakeLists.txt
+    cp -vf CMakeLists_datm.txt src/datm/CMakeLists.txt
+    cp -vf CMakeLists_mosart.txt src/mosart/CMakeLists.txt
+    cp -vf CMakeLists_cesm.txt src/cesm/CMakeLists.txt
+}
+
 copy_source_files() {
     copy_cmake_modules
     copy_gptl
     copy_mct
     copy_pio
-    #copy_esmf
     copy_csm_share
     copy_clm
     copy_stubs
     copy_datm
     copy_mosart
     copy_cesm
-}
-
-backup_cmakelists() {
-    cp -f src/gptl/CMakeLists.txt CMakeLists_gptl.txt
-    cp -f src/mct/CMakeLists.txt CMakeLists_mct.txt
-    cp -f src/pio/CMakeLists.txt CMakeLists_pio.txt
-    cp -f src/csm_share/CMakeLists.txt CMakeLists_csm_share.txt
-    cp -f src/clm/CMakeLists.txt CMakeLists_clm.txt
-    cp -f src/stubs/CMakeLists.txt CMakeLists_stubs.txt
-    cp -f src/datm/CMakeLists.txt CMakeLists_datm.txt
-    cp -f src/mosart/CMakeLists.txt CMakeLists_mosart.txt
-    cp -f src/cesm/CMakeLists.txt CMakeLists_cesm.txt
+    import_cmakelists
 }
 
 if [ "$1" = "--delete" ] || [ "$1" = "-d" ]; then
