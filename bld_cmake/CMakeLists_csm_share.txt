@@ -51,8 +51,6 @@ target_sources(${PROJECT_NAME} PUBLIC
     share/esmf_wrf_timemgr/ESMF_ShrTimeMod.F90
     share/esmf_wrf_timemgr/ESMF_BaseTimeMod.F90
     share/esmf_wrf_timemgr/ESMF_ClockMod.F90
-    share/esmf_wrf_timemgr/unittests/test.F90
-    share/esmf_wrf_timemgr/unittests/wrf_stuff.F90
     share/esmf_wrf_timemgr/ESMF_CalendarMod.F90
     share/esmf_wrf_timemgr/ESMF_TimeMod.F90
     share/esmf_wrf_timemgr/ESMF_FractionMod.F90
@@ -107,7 +105,15 @@ target_sources(${PROJECT_NAME} PUBLIC
     share/util/shr_pcdf_mod.F90
 )
 
-target_link_libraries(${PROJECT_NAME} PUBLIC mct pio gptl)
+# find_package(NetCDF COMPONENTS Fortran)
+# if(NetCDF_Fortran_FOUND)
+#     add_library(CESM::NetCDF UNKNOWN IMPORTED)
+#     target_link_libraries(${PROJECT_NAME} PUBLIC CESM::NetCDF gptl mct pio)
+# else()
+#     target_link_libraries(${PROJECT_NAME} gptl mct pio)
+# endif()
+
+target_link_libraries(${PROJECT_NAME} gptl mct pio)
 
 # configure_file(shr_assert_mod.F90.in shr_assert_mod.F90)
 # configure_file(shr_frz_mod.F90.in shr_frz_mod.F90)

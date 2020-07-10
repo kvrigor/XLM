@@ -12,9 +12,3 @@ target_sources(${PROJECT_NAME}
         atm_comp_mct.F90
 )
 target_link_libraries(${PROJECT_NAME} PRIVATE csm_share)
-
-# install (TARGETS ${PROJECT_NAME}
-# EXPORT "${PROJECT_NAME}Targets"
-# ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-# PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-# )

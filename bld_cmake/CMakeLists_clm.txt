@@ -310,4 +310,10 @@ PUBLIC
     main/filterColMod.F90
 )
 
+# find_package(LAPACK)
+# if(LAPACK_FOUND)
+#     add_library(CESM::LAPACK UNKNOWN IMPORTED)
+#     target_link_libraries(${PROJECT_NAME} PRIVATE CESM::LAPACK)
+# endif()
+
 target_link_libraries(${PROJECT_NAME} PRIVATE csm_share)

@@ -4,7 +4,7 @@ project (pio
     LANGUAGES C Fortran)
 
 add_library(${PROJECT_NAME} STATIC)
-
+#add_executable(${PROJECT_NAME})
 find_package(MPI)
 if(MPI_FOUND)
     target_compile_definitions(${PROJECT_NAME} PUBLIC USEMPIIO)
@@ -14,20 +14,17 @@ endif()
 
 find_package(PnetCDF COMPONENTS Fortran)
 if(PnetCDF_Fortran_FOUND)
+    add_library(CESM::PnetCDF UNKNOWN IMPORTED)
     target_compile_definitions(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:USE_PNETCDF_MOD>)
 else()
     find_package(NetCDF COMPONENTS Fortran)
     if(NetCDF_Fortran_FOUND)
+        add_library(CESM::NetCDF UNKNOWN IMPORTED)
         target_compile_definitions(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:_NETCDF _NETCDF4>)
     else()
         target_compile_definitions(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:_PNETCDF>)
     endif()
 endif()
-
-# According to comment header in pio_support.F90, _NO_MPI_RSEND 
-# is work around for poor rsend performance on cray systems with
-# Gemini interconnect
-# target_compile_definitions(${PROJECT_NAME} PRIVATE _NO_MPI_RSEND)
 
 target_sources(${PROJECT_NAME} 
     PUBLIC
@@ -59,3 +56,11 @@ target_sources(${PROJECT_NAME}
         rearrange.F90
         topology.c
 )
+
+# if(PnetCDF_Fortran_FOUND)
+#     target_link_libraries(${PROJECT_NAME} PRIVATE CESM::PnetCDF)
+# else()
+#     if(NetCDF_Fortran_FOUND)
+#         target_link_libraries(${PROJECT_NAME} PRIVATE CESM::NetCDF)
+#     endif()
+# endif()
