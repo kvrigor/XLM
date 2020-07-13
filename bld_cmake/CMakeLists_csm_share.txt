@@ -105,15 +105,14 @@ target_sources(${PROJECT_NAME} PUBLIC
     share/util/shr_pcdf_mod.F90
 )
 
-# find_package(NetCDF COMPONENTS Fortran)
-# if(NetCDF_Fortran_FOUND)
-#     add_library(CESM::NetCDF UNKNOWN IMPORTED)
-#     target_link_libraries(${PROJECT_NAME} PUBLIC CESM::NetCDF gptl mct pio)
-# else()
-#     target_link_libraries(${PROJECT_NAME} gptl mct pio)
-# endif()
+find_package(NetCDF COMPONENTS Fortran)
+if(NetCDF_Fortran_FOUND)
+    add_library(NetCDF::NetCDF UNKNOWN IMPORTED)
+    set_target_properties(NetCDF::NetCDF PROPERTIES IMPORTED_LOCATION "${NetCDF_Fortran_LIBRARY}")
+    target_link_libraries(${PROJECT_NAME} PRIVATE NetCDF::NetCDF)
+endif()
 
-target_link_libraries(${PROJECT_NAME} gptl mct pio)
+target_link_libraries(${PROJECT_NAME} PUBLIC gptl mct pio)
 
 # configure_file(shr_assert_mod.F90.in shr_assert_mod.F90)
 # configure_file(shr_frz_mod.F90.in shr_frz_mod.F90)
