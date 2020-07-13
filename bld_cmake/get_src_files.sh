@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -Eeuo pipefail
+set -Eeo pipefail
 cime_src=../cime/src
 genf90=`realpath $cime_src/externals/genf90/genf90.pl`
 
@@ -18,9 +18,20 @@ copy_gptl () {
 
 copy_mct () {
     lib_folder=src/mct
-    mkdir -p $lib_folder/mct $lib_folder/mpeu
+    mkdir -p $lib_folder/mct $lib_folder/mpeu 
     cp -rf $cime_src/externals/mct/mct/* $lib_folder/mct
     cp -rf $cime_src/externals/mct/mpeu/* $lib_folder/mpeu
+
+    # Hack script in order to generate config.h
+    (
+        mkdir -p $lib_folder/temp
+        cp -rf $cime_src/externals/mct/* $lib_folder/temp
+        cd $lib_folder/temp
+        ./configure 1>/dev/null
+        mv config.h ../mpeu/config.h 
+        cd ..
+        rm -rf $lib_folder/temp
+    )
     find $lib_folder \( -iname "*.F90" -or -iname "*.c" \) | sed -e "s|^$lib_folder/||" > $lib_folder/srcFiles.txt
     echo "Imported MCT source files"
 }
@@ -227,11 +238,11 @@ copy_source_files() {
 
 if [ "$1" = "--delete" ] || [ "$1" = "-d" ]; then
     backup_cmakelists
-    rm -rf src
+    rm -rf src cmake bld run
     echo "Removed src directory"
 elif [ "$1" = "--clean" ] || [ "$1" = "-c" ]; then
     backup_cmakelists
-    rm -rf src
+    rm -rf src cmake bld run
     copy_source_files
 else
     copy_source_files
