@@ -7,7 +7,7 @@ add_library(${PROJECT_NAME} STATIC)
 
 #build requirements
 target_compile_definitions(${PROJECT_NAME} PRIVATE NDEBUG) #_NETCDF4 USE_PNETCDF_MOD)
-target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-form -ffree-line-length-none -mcmodel=medium -fconvert=big-endian>)
+#target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-form -ffree-line-length-none -mcmodel=medium -fconvert=big-endian>)
 
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 

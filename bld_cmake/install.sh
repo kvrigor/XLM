@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -Eeo pipefail
 
 if [ ! -d src ]; then
-    source get_src_files.sh
-    copy_source_files
+    ./get_src_files.sh
 fi
 
 if [ -f /etc/FZJ/systemname ]; then
@@ -46,8 +47,8 @@ cmake -S src -B bld -DCMAKE_C_COMPILER=mpicc \
                     -DCMAKE_Fortran_COMPILER=mpif90 \
                     -DCMAKE_INSTALL_PREFIX=$(pwd)/run \
                     -DCMAKE_MODULE_PATH=$(pwd)/cmake #-LA --trace
-cmake --build bld --clean-first #--verbose
-#cmake --build bld --target cesm --clean-first
+cmake --build bld --clean-first #--parallel --verbose
+#cmake --build bld --target csm_share --clean-first
 cmake --install bld
 
 

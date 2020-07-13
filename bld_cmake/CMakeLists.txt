@@ -2,22 +2,32 @@ cmake_minimum_required (VERSION 3.14)
 
 project (xlm LANGUAGES C Fortran)
 
-# Global compile definitions
+# Set global compile features and definitions
 if(UNIX AND NOT APPLE)
     add_compile_definitions(LINUX)
 endif()
 
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-    add_compile_definitions($<$<COMPILE_LANGUAGE:C>:CPRGNU>)
+    set(cdefs CPRGNU)
+    set(cflags -O -std=gnu99)
 elseif(CMAKE_C_COMPILER_ID STREQUAL "Intel")
-    add_compile_definitions($<$<COMPILE_LANGUAGE:C>:CPRINTEL>)
+    set(cdefs CPRINTEL)
+    set(cflags -qno-opt-dynamic-align -fp-model precise -std=gnu99 -O2 -debug minimal -free)
 endif()
 
 if(CMAKE_Fortran_COMPILER_ID STREQUAL "GNU")
-    add_compile_definitions($<$<COMPILE_LANGUAGE:Fortran>:CPRGNU>)
+    set(fdefs CPRGNU)
+    set(fflags -ffree-form -ffree-line-length-none -fconvert=big-endian -O)
 elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "Intel")
-    add_compile_definitions($<$<COMPILE_LANGUAGE:Fortran>:CPRINTEL>)
+    set(fdefs CPRINTEL)
+    set(fflags -qno-opt-dynamic-align  -convert big_endian -assume byterecl -ftz -traceback -assume realloc_lhs -fp-model source -O2 -debug minimal -free)
 endif()
+
+add_compile_options("$<$<COMPILE_LANGUAGE:Fortran>:${fflags}>")
+add_compile_options("$<$<COMPILE_LANGUAGE:C>:${cflags}>")
+add_compile_definitions("$<$<COMPILE_LANGUAGE:Fortran>:${fdefs}>")
+add_compile_definitions($<$<COMPILE_LANGUAGE:C>:${cdefs}>)
+
 
 # Copied from https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/RPATH-handling#always-full-rpath
 set(CMAKE_SKIP_BUILD_RPATH FALSE)

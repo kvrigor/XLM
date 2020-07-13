@@ -21,9 +21,9 @@ target_compile_definitions(${PROJECT_NAME}
         NUM_COMP_INST_ESP=1
 )
 
-target_compile_options(${PROJECT_NAME} 
-    PRIVATE 
-        $<$<COMPILE_LANGUAGE:Fortran>:-ffree-form -ffree-line-length-none -fconvert=big-endian -mcmodel=medium>)
+# target_compile_options(${PROJECT_NAME} 
+#     PRIVATE 
+#         $<$<COMPILE_LANGUAGE:Fortran>:-ffree-form -ffree-line-length-none -fconvert=big-endian -mcmodel=medium>)
 
 target_sources(${PROJECT_NAME} PRIVATE
     share/RandNum/src/dsfmt_f03/dSFMT.c

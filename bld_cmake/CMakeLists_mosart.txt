@@ -6,7 +6,7 @@ project (rof
 add_library(${PROJECT_NAME} STATIC)
 
 #target_compile_definitions(${PROJECT_NAME} PRIVATE _MEMTRACE NO_MCT)
-target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-form -ffree-line-length-none -mcmodel=medium -fconvert=big-endian>)
+#target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-form -ffree-line-length-none -mcmodel=medium -fconvert=big-endian>)
 
 target_sources(${PROJECT_NAME} PUBLIC 
     cpl/rof_cpl_indices.F90

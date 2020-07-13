@@ -9,12 +9,6 @@ add_library(${PROJECT_NAME} STATIC)
 # NDEBUG defined in assermpeu.H 
 target_compile_definitions(${PROJECT_NAME} PRIVATE NDEBUG SYSLINUX)
 
-# TODO: get_zeits.c requires config.h which is auto-fenerated by autotools configure script.
-# Skipping this for now!
-# target_sources(${PROJECT_NAME} PRIVATE mpeu/get_zeits.c)
-
-#target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-form -ffree-line-length-none -fconvert=big-endian -mcmodel=medium>)
-
 target_sources(${PROJECT_NAME} 
     PUBLIC 
         mpeu/get_zeits.c
