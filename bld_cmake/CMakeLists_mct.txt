@@ -17,6 +17,7 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE NDEBUG SYSLINUX)
 
 target_sources(${PROJECT_NAME} 
     PUBLIC 
+        mpeu/get_zeits.c
         mpeu/m_FileResolv.F90
         mpeu/m_stdio.F90
         mpeu/m_IndexBin_integer.F90
@@ -74,3 +75,5 @@ target_sources(${PROJECT_NAME}
         mct/m_ExchangeMaps.F90
         mct/m_SparseMatrixComms.F90
 )
+
+install (TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})

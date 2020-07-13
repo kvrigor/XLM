@@ -19,6 +19,16 @@ elseif(CMAKE_Fortran_COMPILER_ID STREQUAL "Intel")
     add_compile_definitions($<$<COMPILE_LANGUAGE:Fortran>:CPRINTEL>)
 endif()
 
+# Copied from https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/RPATH-handling#always-full-rpath
+set(CMAKE_SKIP_BUILD_RPATH FALSE)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+if("${isSystemDir}" STREQUAL "-1")
+    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+endif("${isSystemDir}" STREQUAL "-1")
+# 
 # https://cmake.org/cmake/help/v3.17/variable/CMAKE_LANG_COMPILER_ID.html#variable:CMAKE_<LANG>_COMPILER_ID
 # add_compile_definitions(
 #     $<$<COMPILE_LANG_AND_ID:C,GNU>:CPRGNU>

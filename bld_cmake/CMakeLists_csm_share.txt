@@ -114,6 +114,8 @@ endif()
 
 target_link_libraries(${PROJECT_NAME} PUBLIC gptl mct pio)
 
+install (TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
 # configure_file(shr_assert_mod.F90.in shr_assert_mod.F90)
 # configure_file(shr_frz_mod.F90.in shr_frz_mod.F90)
 # configure_file(shr_infnan_mod.F90.in shr_infnan_mod.F90)
