@@ -7,6 +7,7 @@ genf90=`realpath $cime_src/externals/genf90/genf90.pl`
 copy_cmake_modules() {
     mkdir -p cmake
     cp -rf $cime_src/externals/pio2/cmake/* cmake
+    wget -qcO cmake/FindLAPACK.cmake https://raw.githubusercontent.com/scivision/lapack-cmake-meson/master/cmake/Modules/FindLAPACK.cmake
     echo "Imported CMake modules"
 }
 

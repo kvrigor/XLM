@@ -312,14 +312,7 @@ PUBLIC
 
 find_package(LAPACK)
 if(LAPACK_FOUND)
-    add_library(LAPACK::LAPACK UNKNOWN IMPORTED)
-    # The BLAS library has to be removed from link line. 
-    # See https://gitlab.kitware.com/cmake/cmake/-/blob/master/Modules/FindLAPACK.cmake#L540
-    set(_lapack_libs "${LAPACK_LIBRARIES}")
-    list(REMOVE_ITEM _lapack_libs "${BLAS_LIBRARIES}")
-    set_target_properties(LAPACK::LAPACK PROPERTIES IMPORTED_LOCATION "${_lapack_libs}")
     target_link_libraries(${PROJECT_NAME} PRIVATE LAPACK::LAPACK)
-    unset(_lapack_libs)
 endif()
 
 target_link_libraries(${PROJECT_NAME} PRIVATE csm_share)
