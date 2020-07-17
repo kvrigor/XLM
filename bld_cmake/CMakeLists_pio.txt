@@ -11,25 +11,24 @@ if(MPI_FOUND)
 else()
     target_compile_definitions(${PROJECT_NAME} PRIVATE NO_MPIMOD NO_MPI2)
 endif()
+target_compile_definitions(${PROJECT_NAME} PRIVATE TIMING)
 
 find_package(PnetCDF COMPONENTS Fortran)
 if(PnetCDF_Fortran_FOUND)
     add_library(PnetCDF::PnetCDF UNKNOWN IMPORTED)
-    target_compile_definitions(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:USE_PNETCDF_MOD>)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<COMPILE_LANGUAGE:Fortran>:_PNETCDF>)
     set_target_properties(PnetCDF::PnetCDF PROPERTIES IMPORTED_LOCATION "${PnetCDF_Fortran_LIBRARY}")
-else()
-    find_package(NetCDF COMPONENTS Fortran)
-    if(NetCDF_Fortran_FOUND)
-        add_library(NetCDF::NetCDF UNKNOWN IMPORTED)
-        target_compile_definitions(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:_NETCDF _NETCDF4>)
-        set_target_properties(NetCDF::NetCDF PROPERTIES IMPORTED_LOCATION "${NetCDF_Fortran_LIBRARY}")
-    else()
-        target_compile_definitions(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:_PNETCDF>)
-    endif()
+endif()
+
+find_package(NetCDF COMPONENTS Fortran)
+if(NetCDF_Fortran_FOUND)
+    add_library(NetCDF::NetCDF UNKNOWN IMPORTED)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<COMPILE_LANGUAGE:Fortran>:_NETCDF _NETCDF4>)
+    set_target_properties(NetCDF::NetCDF PROPERTIES IMPORTED_LOCATION "${NetCDF_Fortran_LIBRARY}")
 endif()
 
 target_sources(${PROJECT_NAME} 
-    PUBLIC
+    PUBLIC    
         alloc_mod.F90
         box_rearrange.F90
         calcdecomp.F90
@@ -60,10 +59,11 @@ target_sources(${PROJECT_NAME}
 )
 
 if(PnetCDF_Fortran_FOUND)
-    target_link_libraries(${PROJECT_NAME} PRIVATE PnetCDF::PnetCDF)
-else()
-    if(NetCDF_Fortran_FOUND)
-        target_link_libraries(${PROJECT_NAME} PRIVATE NetCDF::NetCDF)
-    endif()
+    target_link_libraries(${PROJECT_NAME} PUBLIC PnetCDF::PnetCDF)
 endif()
+if(NetCDF_Fortran_FOUND)
+    target_link_libraries(${PROJECT_NAME} PUBLIC NetCDF::NetCDF)
+endif()
+target_link_libraries(${PROJECT_NAME} PRIVATE gptl)
+
 install (TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
