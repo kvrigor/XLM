@@ -1,0 +1,121 @@
+project (csm_share
+    DESCRIPTION "Types and utility functions shared among CESM component models"
+    HOMEPAGE_URL "https://github.com/ESMCI/cime/tree/cime5.6.33/src"
+    LANGUAGES C Fortran)
+
+add_library(${PROJECT_NAME} STATIC)
+
+target_include_directories(${PROJECT_NAME} PUBLIC include)
+target_compile_definitions(${PROJECT_NAME} 
+    PUBLIC 
+        NDEBUG
+        FORTRANUNDERSCORE
+        _PNETCDF
+        NUM_COMP_INST_ATM=1
+        NUM_COMP_INST_LND=1
+        NUM_COMP_INST_ICE=1
+        NUM_COMP_INST_OCN=1
+        NUM_COMP_INST_ROF=1
+        NUM_COMP_INST_GLC=1
+        NUM_COMP_INST_WAV=1
+        NUM_COMP_INST_ESP=1
+)
+
+# target_compile_options(${PROJECT_NAME} 
+#     PRIVATE 
+#         $<$<COMPILE_LANGUAGE:Fortran>:-ffree-form -ffree-line-length-none -fconvert=big-endian -mcmodel=medium>)
+
+target_sources(${PROJECT_NAME} PRIVATE
+    share/RandNum/src/dsfmt_f03/dSFMT.c
+    share/RandNum/src/dsfmt_f03/dSFMT_utils.c
+    share/RandNum/src/kissvec/kissvec.c
+    share/util/shr_reprosumx86.c
+)
+
+target_sources(${PROJECT_NAME} PUBLIC 
+    drivers/mct/shr/shr_fire_emis_mod.F90
+    drivers/mct/shr/shr_ndep_mod.F90
+    drivers/mct/shr/seq_io_read_mod.F90
+    drivers/mct/shr/shr_expr_parser_mod.F90
+    drivers/mct/shr/seq_infodata_mod.F90
+    drivers/mct/shr/seq_comm_mct.F90
+    drivers/mct/shr/seq_drydep_mod.F90
+    drivers/mct/shr/seq_timemgr_mod.F90
+    drivers/mct/shr/glc_elevclass_mod.F90
+    drivers/mct/shr/shr_carma_mod.F90
+    drivers/mct/shr/shr_megan_mod.F90
+    drivers/mct/shr/seq_cdata_mod.F90
+    drivers/mct/shr/seq_flds_mod.F90
+    share/esmf_wrf_timemgr/ESMF_Stubs.F90
+    share/esmf_wrf_timemgr/wrf_message.F90
+    share/esmf_wrf_timemgr/ESMF_ShrTimeMod.F90
+    share/esmf_wrf_timemgr/ESMF_BaseTimeMod.F90
+    share/esmf_wrf_timemgr/ESMF_ClockMod.F90
+    share/esmf_wrf_timemgr/ESMF_CalendarMod.F90
+    share/esmf_wrf_timemgr/ESMF_TimeMod.F90
+    share/esmf_wrf_timemgr/ESMF_FractionMod.F90
+    share/esmf_wrf_timemgr/ESMF_BaseMod.F90
+    share/esmf_wrf_timemgr/ESMF_AlarmClockMod.F90
+    share/esmf_wrf_timemgr/ESMF_AlarmMod.F90
+    share/esmf_wrf_timemgr/MeatMod.F90
+    share/esmf_wrf_timemgr/wrf_error_fatal.F90
+    share/esmf_wrf_timemgr/ESMF_TimeIntervalMod.F90
+    share/esmf_wrf_timemgr/ESMF.F90
+    share/RandNum/src/kissvec/kissvec_mod.F90
+    share/RandNum/src/shr_RandNum_mod.F90
+    share/RandNum/src/dsfmt_f03/dSFMT_interface.F90
+    share/RandNum/src/mt19937/mersennetwister_mod.F90
+    share/streams/shr_stream_mod.F90
+    share/streams/shr_strdata_mod.F90
+    share/streams/shr_tInterp_mod.F90
+    share/streams/shr_dmodel_mod.F90
+    share/util/shr_flds_mod.F90
+    share/util/shr_strconvert_mod.F90
+    share/util/shr_infnan_mod.F90
+    share/util/mct_mod.F90
+    share/util/shr_frz_mod.F90
+    share/util/shr_scam_mod.F90
+    share/util/shr_sys_mod.F90
+    share/util/shr_kind_mod.F90
+    share/util/shr_timer_mod.F90
+    share/util/shr_pio_mod.F90
+    share/util/water_isotopes.F90
+    share/util/shr_ncread_mod.F90
+    share/util/shr_mct_mod.F90
+    share/util/shr_cal_mod.F90
+    share/util/shr_orb_mod.F90
+    share/util/shr_flux_mod.F90
+    share/util/shr_spfn_mod.F90
+    share/util/shr_string_mod.F90
+    share/util/water_types.F90
+    share/util/shr_reprosum_mod.F90
+    share/util/shr_wv_sat_mod.F90
+    share/util/shr_assert_mod.F90
+    share/util/shr_msg_mod.F90
+    share/util/shr_const_mod.F90
+    share/util/shr_file_mod.F90
+    share/util/shr_nl_mod.F90
+    share/util/shr_log_mod.F90
+    share/util/shr_map_mod.F90
+    share/util/shr_vmath_mod.F90
+    share/util/shr_mpi_mod.F90
+    share/util/shr_abort_mod.F90
+    share/util/shr_mem_mod.F90
+    share/util/shr_precip_mod.F90
+    share/util/shr_pcdf_mod.F90
+)
+
+find_package(NetCDF COMPONENTS Fortran)
+if(NetCDF_Fortran_FOUND)
+    add_library(NetCDF::NetCDF UNKNOWN IMPORTED)
+    set_target_properties(NetCDF::NetCDF PROPERTIES IMPORTED_LOCATION "${NetCDF_Fortran_LIBRARY}")
+    target_link_libraries(${PROJECT_NAME} PRIVATE NetCDF::NetCDF)
+endif()
+
+target_link_libraries(${PROJECT_NAME} PUBLIC gptl mct pio)
+
+install (TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
+
+# configure_file(shr_assert_mod.F90.in shr_assert_mod.F90)
+# configure_file(shr_frz_mod.F90.in shr_frz_mod.F90)
+# configure_file(shr_infnan_mod.F90.in shr_infnan_mod.F90)

@@ -1,0 +1,69 @@
+project (pio 
+    DESCRIPTION "Parallel I/O Library modified by CIME developers"
+    HOMEPAGE_URL "https://github.com/ESMCI/cime/tree/cime5.6.33/src/externals/pio1/pio"
+    LANGUAGES C Fortran)
+
+add_library(${PROJECT_NAME} STATIC)
+
+find_package(MPI)
+if(MPI_FOUND)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC USEMPIIO)
+else()
+    target_compile_definitions(${PROJECT_NAME} PRIVATE NO_MPIMOD NO_MPI2)
+endif()
+target_compile_definitions(${PROJECT_NAME} PRIVATE TIMING)
+
+find_package(PnetCDF COMPONENTS Fortran)
+if(PnetCDF_Fortran_FOUND)
+    add_library(PnetCDF::PnetCDF UNKNOWN IMPORTED)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<COMPILE_LANGUAGE:Fortran>:_PNETCDF>)
+    set_target_properties(PnetCDF::PnetCDF PROPERTIES IMPORTED_LOCATION "${PnetCDF_Fortran_LIBRARY}")
+endif()
+
+find_package(NetCDF COMPONENTS Fortran)
+if(NetCDF_Fortran_FOUND)
+    add_library(NetCDF::NetCDF UNKNOWN IMPORTED)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC $<$<COMPILE_LANGUAGE:Fortran>:_NETCDF _NETCDF4>)
+    set_target_properties(NetCDF::NetCDF PROPERTIES IMPORTED_LOCATION "${NetCDF_Fortran_LIBRARY}")
+endif()
+
+target_sources(${PROJECT_NAME} 
+    PUBLIC    
+        alloc_mod.F90
+        box_rearrange.F90
+        calcdecomp.F90
+        calcdisplace_mod.F90
+        iompi_mod.F90
+        ionf_mod.F90
+        nf_mod.F90 
+        piodarray.F90
+        pio.F90
+        pio_kinds.F90
+        piolib_mod.F90
+        pio_mpi_utils.F90
+        pio_msg_callbacks.F90
+        pio_msg_getput_callbacks.F90
+        pio_msg_mod.F90
+        pionfatt_mod.F90
+        pionfget_mod.F90
+        pionfput_mod.F90
+        pionfread_mod.F90
+        pio_nf_utils.F90
+        pionfwrite_mod.F90
+        pio_spmd_utils.F90
+        pio_support.F90
+        pio_types.F90
+        pio_utils.F90
+        rearrange.F90
+        topology.c
+)
+
+if(PnetCDF_Fortran_FOUND)
+    target_link_libraries(${PROJECT_NAME} PUBLIC PnetCDF::PnetCDF)
+endif()
+if(NetCDF_Fortran_FOUND)
+    target_link_libraries(${PROJECT_NAME} PUBLIC NetCDF::NetCDF)
+endif()
+target_link_libraries(${PROJECT_NAME} PRIVATE gptl)
+
+install (TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})

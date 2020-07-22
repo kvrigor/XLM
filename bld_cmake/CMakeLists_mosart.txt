@@ -1,0 +1,29 @@
+project (rof 
+    DESCRIPTION "Model for Scale Adaptive River Transport"
+    HOMEPAGE_URL "https://github.com/ESCOMP/MOSART/tree/release-cesm2.0"
+    LANGUAGES Fortran)
+
+add_library(${PROJECT_NAME} STATIC)
+
+#target_compile_definitions(${PROJECT_NAME} PRIVATE _MEMTRACE NO_MCT)
+#target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-form -ffree-line-length-none -mcmodel=medium -fconvert=big-endian>)
+
+target_sources(${PROJECT_NAME} PUBLIC 
+    cpl/rof_cpl_indices.F90
+    cpl/rof_comp_mct.F90
+    riverroute/RtmIO.F90
+    riverroute/MOSART_physics_mod.F90
+    riverroute/RtmRestFile.F90
+    riverroute/RtmMod.F90
+    riverroute/RtmDateTime.F90
+    riverroute/RtmFileUtils.F90
+    riverroute/RtmVar.F90
+    riverroute/RtmHistFile.F90
+    riverroute/RtmSpmd.F90
+    riverroute/RtmHistFlds.F90
+    riverroute/RunoffMod.F90
+    riverroute/RtmTimeManager.F90
+)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE csm_share)
+install (TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})

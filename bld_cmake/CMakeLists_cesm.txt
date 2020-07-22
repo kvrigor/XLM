@@ -1,0 +1,43 @@
+project (cesm 
+    DESCRIPTION "Community Earth System Model"
+    HOMEPAGE_URL "https://github.com/ESCOMP/MOSART/tree/release-cesm2.0"
+    LANGUAGES Fortran)
+
+add_executable(${PROJECT_NAME})
+set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".exe")
+
+#target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:Fortran>:-ffree-form -ffree-line-length-none -mcmodel=medium -fconvert=big-endian>)
+
+target_sources(${PROJECT_NAME} PRIVATE
+    map_glc2lnd_mod.F90
+    prep_wav_mod.F90
+    seq_io_mod.F90
+    seq_hist_mod.F90
+    seq_frac_mct.F90
+    prep_rof_mod.F90
+    map_lnd2rof_irrig_mod.F90
+    cime_comp_mod.F90
+    seq_rest_mod.F90
+    prep_ocn_mod.F90
+    map_lnd2glc_mod.F90
+    prep_glc_mod.F90
+    cime_driver.F90
+    component_mod.F90
+    component_type_mod.F90
+    seq_flux_mct.F90
+    cplcomp_exchange_mod.F90
+    seq_domain_mct.F90
+    seq_diag_mct.F90
+    prep_ice_mod.F90
+    seq_map_type_mod.F90
+    prep_aoflux_mod.F90
+    prep_lnd_mod.F90
+    t_driver_timers_mod.F90
+    seq_map_mod.F90
+    prep_atm_mod.F90
+    mrg_mod.F90
+)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE csm_share clm atm ocn wav ice glc esp rof)
+
+install (TARGETS ${PROJECT_NAME} RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})

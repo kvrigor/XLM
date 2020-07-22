@@ -1,0 +1,15 @@
+project (atm 
+    DESCRIPTION "Data atmoshpere model."
+    HOMEPAGE_URL "https://github.com/ESMCI/cime/tree/cime5.6.33/src/components/data_comps/datm"
+    LANGUAGES Fortran)
+
+add_library(${PROJECT_NAME} STATIC)
+
+target_sources(${PROJECT_NAME} 
+    PUBLIC 
+        datm_shr_mod.F90
+        datm_comp_mod.F90
+        atm_comp_mct.F90
+)
+target_link_libraries(${PROJECT_NAME} PRIVATE csm_share)
+install (TARGETS ${PROJECT_NAME} ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
